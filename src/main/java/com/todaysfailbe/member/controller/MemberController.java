@@ -40,9 +40,9 @@ public class MemberController {
 			)
 	})
 	@PostMapping
-	public ResponseEntity<Void> createMember(@RequestBody @Valid CreateMemberRequest request) {
-		log.info("[MemberController.createMember] 회원 생성 요청: {}", request);
-		memberService.createMember(request);
+	public ResponseEntity<Void> createMember(@RequestBody @Valid CreateMemberRequest createMemberRequest) {
+		log.info("[MemberController.createMember] 회원 생성 요청: {}", createMemberRequest);
+		memberService.createMember(createMemberRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 

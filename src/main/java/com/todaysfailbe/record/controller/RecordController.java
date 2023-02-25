@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.service.RecordService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,10 +25,22 @@ import lombok.extern.slf4j.Slf4j;
 public class RecordController {
 	private final RecordService recordService;
 
+	@ApiOperation(
+			value = "실패 기록",
+			notes = "실패 기록 요청을 받아 저장합니다"
+	)
+	@ApiResponses({
+			@ApiResponse(
+					code = 201, message = "API 정상 작동 / 실패 기록 저장 완료"
+			),
+			@ApiResponse(
+					code = 400, message = "입력 값이 잘못되었을 경우입니다"
+			)
+	})
 	@PostMapping
-	public ResponseEntity<Void> createRecord(@RequestBody @Valid CreateRecordRequest request) {
+	public ResponseEntity<Void> createRecord(@RequestBody @Valid CreateRecordRequest createRecordRequest) {
 		log.info("[RecordController.createRecord] 레코드 생성 요청");
-		recordService.createRecord(request);
+		recordService.createRecord(createRecordRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
