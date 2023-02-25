@@ -18,7 +18,7 @@ jobs:
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
-          project: todays_fail/today_fail
+          project: todays_fail/todaysfail-be
           stage: dev
           yaml: |
             name: todaysfail-be
