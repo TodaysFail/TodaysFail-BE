@@ -46,7 +46,9 @@ class MemberControllerTest {
 			mockMvc.perform(post("/api/v1/member")
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(objectMapper.writeValueAsString(createMemberRequest)))
-					.andExpect(status().isBadRequest());
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("이름은 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"));
 		}
 
 		@Test
@@ -61,12 +63,14 @@ class MemberControllerTest {
 			mockMvc.perform(post("/api/v1/member")
 							.contentType(MediaType.APPLICATION_JSON)
 							.content(objectMapper.writeValueAsString(createMemberRequest)))
-					.andExpect(status().isBadRequest());
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("이름은 10자 이하로 입력해주세요."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"));
 		}
 
 		@Test
-		@DisplayName("회원을 생성한다.")
-		void 회원을_생성한다() throws Exception {
+		@DisplayName("입력 값이 정상적이라면 회원을 생성한다.")
+		void 입력_값이_정상적이라면_회원을_생성한다() throws Exception {
 			// given
 			CreateMemberRequest createMemberRequest = CreateMemberRequest.builder()
 					.name("주니")

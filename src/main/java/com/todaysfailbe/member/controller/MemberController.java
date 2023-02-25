@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +29,11 @@ public class MemberController {
 		log.info("[MemberController.createMember] 회원 생성 요청: {}", request);
 		memberService.createMember(request);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@GetMapping("/duplicate/{name}")
+	public ResponseEntity<Boolean> checkDuplicateName(@PathVariable String name) {
+		log.info("[MemberController.checkDuplicateName] 중복 이름 체크 요청: {}", name);
+		return ResponseEntity.ok(memberService.checkDuplicateName(name));
 	}
 }
