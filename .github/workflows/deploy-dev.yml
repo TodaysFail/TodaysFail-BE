@@ -31,13 +31,13 @@ jobs:
                 - name: SPRING_PROFILES_ACTIVE
                   value: dev
                 - name: DATASOURCE_HOST
-                  value: ${{DEV_DATASOURCE_HOST}}
+                  value: ${{ DEV_DATASOURCE_HOST }}
                 - name: DATASOURCE_PORT
-                  value: ${{DEV_DATASOURCE_PORT}}
+                  value: ${{ DEV_DATASOURCE_PORT }}
                 - name: DATASOURCE_USERNAME
-                  value: ${{DEV_DATASOURCE_USERNAME}}
+                  value: ${{ DEV_DATASOURCE_USERNAME }}
                 - name: DATASOURCE_PASSWORD
-                  value: ${{DEV_DATASOURCE_PASSWORD}}
+                  value: ${{ DEV_DATASOURCE_PASSWORD }}
             context:
               git:
                 url: git@github.com:${{ github.repository }}.git
