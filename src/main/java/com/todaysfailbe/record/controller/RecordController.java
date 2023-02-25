@@ -38,9 +38,9 @@ public class RecordController {
 			)
 	})
 	@PostMapping
-	public ResponseEntity<Void> createRecord(@RequestBody @Valid CreateRecordRequest request) {
+	public ResponseEntity<Void> createRecord(@RequestBody @Valid CreateRecordRequest createRecordRequest) {
 		log.info("[RecordController.createRecord] 레코드 생성 요청");
-		recordService.createRecord(request);
+		recordService.createRecord(createRecordRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
