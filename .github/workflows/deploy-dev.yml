@@ -33,7 +33,7 @@ jobs:
                 - name: DATASOURCE_HOST
                   value: ${{ secrets.DEV_DATASOURCE_HOST }}
                 - name: DATASOURCE_PORT
-                  value: ${{ secrets.DEV_DATASOURCE_PORT }}
+                  value: "${{ secrets.DEV_DATASOURCE_PORT }}"
                 - name: DATASOURCE_USERNAME
                   value: ${{ secrets.DEV_DATASOURCE_USERNAME }}
                 - name: DATASOURCE_PASSWORD
