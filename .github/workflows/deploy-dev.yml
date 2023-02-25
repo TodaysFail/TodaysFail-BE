@@ -18,7 +18,7 @@ jobs:
         uses: cloudtype-github-actions/deploy@v1
         with:
           token: ${{ secrets.CLOUDTYPE_TOKEN }}
-          project: todays_fail/today_fail
+          project: todays_fail/todaysfail-be
           stage: dev
           yaml: |
             name: todaysfail-be
@@ -33,7 +33,7 @@ jobs:
                 - name: DATASOURCE_HOST
                   value: ${{ secrets.DEV_DATASOURCE_HOST }}
                 - name: DATASOURCE_PORT
-                  value: ${{ secrets.DEV_DATASOURCE_PORT }}
+                  value: "${{ secrets.DEV_DATASOURCE_PORT }}"
                 - name: DATASOURCE_USERNAME
                   value: ${{ secrets.DEV_DATASOURCE_USERNAME }}
                 - name: DATASOURCE_PASSWORD
