@@ -53,7 +53,7 @@ class MemberServiceTest {
 
 		@Test
 		@DisplayName("정상적이라면 예외를 발생시키지 않는다.")
-		void 정상적이라면_예외를_발생시키지_않는다() {
+		void 정상적이라면_예외를_발생시키다지_않는다() {
 			// given
 			CreateMemberRequest createMemberRequest = mock(CreateMemberRequest.class);
 			given(createMemberRequest.getName()).willReturn("주니");

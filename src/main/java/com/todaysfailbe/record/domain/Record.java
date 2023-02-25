@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 
 import com.todaysfailbe.common.domain.BaseEntity;
 import com.todaysfailbe.member.domain.Member;
+import com.todaysfailbe.record.model.request.CreateRecordRequest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class Record extends BaseEntity {
 	@Column(name = "FEEL")
 	private String feel;
 
-	public Record(Member member, String title, String content, String feel) {
+	private Record(Member member, String title, String content, String feel) {
 		Assert.notNull(member, "회원은 필수입니다.");
 		Assert.notNull(title, "제목은 필수입니다.");
 		Assert.notNull(content, "내용은 필수입니다.");
@@ -48,5 +49,14 @@ public class Record extends BaseEntity {
 		this.title = title;
 		this.content = content;
 		this.feel = feel;
+	}
+
+	public static Record of(Member member, CreateRecordRequest request) {
+		return new Record(
+				member,
+				request.getTitle(),
+				request.getContent(),
+				request.getFeel()
+		);
 	}
 }
