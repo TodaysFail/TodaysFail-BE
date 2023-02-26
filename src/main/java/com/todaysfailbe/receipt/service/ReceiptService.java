@@ -64,8 +64,11 @@ public class ReceiptService {
 				.map(ReceiptDto::from)
 				.collect(Collectors.toList());
 
-		ReceiptResponse response = ReceiptResponse.from(receiptDtoList,
-				yearMonthDateConversion(receipt.getCreatedAt()));
+		ReceiptResponse response = ReceiptResponse.from(
+				receiptDtoList,
+				yearMonthDateConversion(receipt.getCreatedAt()),
+				receiptId
+		);
 		log.info("[ReceiptService.getReceipt] 영수증 조회 완료: {}", response);
 		return response;
 	}
