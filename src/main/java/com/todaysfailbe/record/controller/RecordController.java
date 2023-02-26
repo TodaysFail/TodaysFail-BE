@@ -1,8 +1,6 @@
 package com.todaysfailbe.record.controller;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
 
 import javax.validation.Valid;
 
@@ -15,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
 import com.todaysfailbe.record.model.request.RecordsRequest;
+import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.service.RecordService;
 
 import io.swagger.annotations.ApiOperation;
@@ -67,10 +65,9 @@ public class RecordController {
 			)
 	})
 	@GetMapping
-	public ResponseEntity<ConcurrentMap<LocalDate, List<Record>>> getRecords(
-			@RequestBody @Valid RecordsRequest recordsRequest) {
+	public ResponseEntity<List<RecordsResponse>> getRecords(@Valid RecordsRequest recordsRequest) {
 		log.info("[RecordController.getRecords] 레코드 목록 조회 요청");
-		ConcurrentMap<LocalDate, List<Record>> response = recordService.getRecords(recordsRequest);
+		List<RecordsResponse> response = recordService.getRecords(recordsRequest);
 		log.info("[RecordController.getRecords] 레코드 목록 조회 성공");
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
