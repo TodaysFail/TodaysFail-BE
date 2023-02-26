@@ -49,7 +49,7 @@ public class ReceiptService {
 			throw new IllegalArgumentException("해당 날짜에 해당하는 실패 기록이 없습니다.");
 		}
 
-		Receipt receipt = receiptRepository.save(Receipt.from(list));
+		Receipt receipt = receiptRepository.save(Receipt.from(list, request.getDate()));
 		log.info("[ReceiptService.createReceipt] 영수증 등록 완료: {}", request);
 		return receipt.getId().toString();
 	}
@@ -66,7 +66,7 @@ public class ReceiptService {
 
 		ReceiptResponse response = ReceiptResponse.from(
 				receiptDtoList,
-				yearMonthDateConversion(receipt.getCreatedAt()),
+				yearMonthDateConversion(receipt.getReceiptDate()),
 				receiptId
 		);
 		log.info("[ReceiptService.getReceipt] 영수증 조회 완료: {}", response);

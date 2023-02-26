@@ -13,8 +13,7 @@ public class DateTimeUtil {
 		return LocalDateTime.of(date, LocalTime.MAX);
 	}
 
-	public static String yearMonthDateConversion(LocalDateTime localDateTime) {
-		LocalDate localDate = localDateTime.toLocalDate();
+	public static String yearMonthDateConversion(LocalDate localDate) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(localDate.getMonth().toString() + " ");
 		sb.append(String.format("%02d", localDate.getMonthValue()) + " - ");
