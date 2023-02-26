@@ -46,7 +46,7 @@ public class RecordDto {
 		return new RecordDto(
 				record.getId(),
 				record.getTitle(),
-				record.getTitle(),
+				record.getContent(),
 				record.getFeel(),
 				createdAt,
 				memberDto
