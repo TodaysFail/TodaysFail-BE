@@ -32,8 +32,12 @@ public class Receipt extends BaseEntity {
 	@ElementCollection
 	private List<Long> recordIds;
 
-	public Receipt(List<Long> recordIds) {
+	private Receipt(List<Long> recordIds) {
 		Assert.notNull(recordIds, "실패 기록 ID 리스트는 필수입니다.");
 		this.recordIds = recordIds;
+	}
+
+	public static Receipt from(List<Long> recordIds) {
+		return new Receipt(recordIds);
 	}
 }
