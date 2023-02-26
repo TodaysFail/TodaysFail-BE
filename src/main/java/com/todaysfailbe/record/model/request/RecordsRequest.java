@@ -18,6 +18,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class RecordsRequest {
 	@NotBlank(message = "작성자는 필수입니다.")
-	@ApiModelProperty(value = "작성자", required = true)
+	@ApiModelProperty(value = "작성자", required = true, example = "주니")
 	private String writer;
 }
