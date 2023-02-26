@@ -24,13 +24,17 @@ public class ReceiptResponse {
 	@ApiModelProperty(value = "영수증 날짜", required = true, example = "FEBRUARY 02 - 26, 2023")
 	private String date;
 
-	private ReceiptResponse(Integer total, List<ReceiptDto> receiptList, String date) {
+	@ApiModelProperty(value = "영수증 번호", required = true, example = "FEBRUARY 02 - 26, 2023")
+	private String uuid;
+
+	private ReceiptResponse(Integer total, List<ReceiptDto> receiptList, String date, String uuid) {
 		this.total = total;
 		this.receiptList = receiptList;
 		this.date = date;
+		this.uuid = uuid;
 	}
 
-	public static ReceiptResponse from(List<ReceiptDto> receiptList, String date) {
-		return new ReceiptResponse(receiptList.size(), receiptList, date);
+	public static ReceiptResponse from(List<ReceiptDto> receiptList, String date, String uuid) {
+		return new ReceiptResponse(receiptList.size(), receiptList, date, uuid);
 	}
 }
