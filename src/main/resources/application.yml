@@ -1,1 +1,10 @@
-
+spring:
+  profiles:
+    group:
+      "test": "test"
+      "local": "local"
+      "dev": "dev, datasource"
+      "prod": "prod, datasource"
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
