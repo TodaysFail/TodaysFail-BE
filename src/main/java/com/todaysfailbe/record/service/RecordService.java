@@ -2,6 +2,7 @@ package com.todaysfailbe.record.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -9,12 +10,16 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.todaysfailbe.common.utils.DateTimeUtil;
 import com.todaysfailbe.member.domain.Member;
+import com.todaysfailbe.member.model.response.MemberDto;
 import com.todaysfailbe.member.repository.MemberRepository;
 import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
 import com.todaysfailbe.record.model.request.RecordsRequest;
+import com.todaysfailbe.record.model.response.RecordDto;
+import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.repository.RecordRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -38,7 +43,7 @@ public class RecordService {
 	}
 
 	@Transactional(readOnly = true)
-	public ConcurrentMap<LocalDate, List<Record>> getRecords(RecordsRequest request) {
+	public List<RecordsResponse> getRecords(RecordsRequest request) {
 		log.info("[RecordService.getRecords] 레코드 목록 조회 요청");
 		Member member = memberRepository.findByName(request.getWriter())
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
@@ -50,8 +55,25 @@ public class RecordService {
 						}
 				));
 
+		List<RecordsResponse> response = new ArrayList<>();
+
+		for (LocalDate date : map.keySet()) {
+			List<RecordDto> records = map.get(date).stream()
+					.map(record ->
+							RecordDto.from(
+									record,
+									DateTimeUtil.hourMinuteSecondConversion(record.getCreatedAt()),
+									MemberDto.from(record.getMember())
+							)
+					).collect(Collectors.toList());
+			records.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
+			response.add(RecordsResponse.from(date, records));
+		}
+
+		response.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+
 		log.info("[RecordService.getRecords] 레코드 목록 조회 성공");
-		return map;
+		return response;
 	}
 
 	@Transactional
