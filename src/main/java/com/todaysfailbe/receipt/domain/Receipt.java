@@ -1,5 +1,6 @@
 package com.todaysfailbe.receipt.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,12 +37,16 @@ public class Receipt extends BaseEntity {
 	@ElementCollection
 	private List<Long> recordIds;
 
-	private Receipt(List<Long> recordIds) {
+	private LocalDate receiptDate;
+
+	private Receipt(List<Long> recordIds, LocalDate receiptDate) {
 		Assert.notNull(recordIds, "실패 기록 ID 리스트는 필수입니다.");
+		Assert.notNull(receiptDate, "영수증 발급일은 필수입니다.");
 		this.recordIds = recordIds;
+		this.receiptDate = receiptDate;
 	}
 
-	public static Receipt from(List<Long> recordIds) {
-		return new Receipt(recordIds);
+	public static Receipt from(List<Long> recordIds, LocalDate receiptDate) {
+		return new Receipt(recordIds, receiptDate);
 	}
 }
