@@ -54,7 +54,7 @@ public class ReceiptController {
 	)
 	@ApiResponses({
 			@ApiResponse(
-					code = 201, message = "API 정상 작동 / 영수증 조회 완료"
+					code = 200, message = "API 정상 작동 / 영수증 조회 완료"
 			),
 			@ApiResponse(
 					code = 400, message = "영수증 번호가 잘못된 경우입니다."
