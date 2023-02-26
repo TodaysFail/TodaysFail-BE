@@ -60,7 +60,7 @@ public class RecordController {
 	)
 	@ApiResponses({
 			@ApiResponse(
-					code = 201, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
+					code = 200, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
 			),
 			@ApiResponse(
 					code = 400, message = "입력 값이 잘못되었을 경우입니다"
@@ -81,7 +81,7 @@ public class RecordController {
 	)
 	@ApiResponses({
 			@ApiResponse(
-					code = 201, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
+					code = 200, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
 			),
 			@ApiResponse(
 					code = 400, message = "해당 실패 기록이 존재하지 않거나 해당 실패 기록이 해당 닉네임의 것이 아닐 경우입니다."

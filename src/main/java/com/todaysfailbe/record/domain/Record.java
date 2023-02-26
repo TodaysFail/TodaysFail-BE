@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.util.Assert;
 
 import com.todaysfailbe.common.domain.BaseEntity;
@@ -21,6 +23,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@Where(clause = "DELETED_AT is null")
+@SQLDelete(sql = "UPDATE Record SET Record.DELETED_AT = CURRENT_TIMESTAMP WHERE Record.RECORD_ID = ?")
 public class Record extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
