@@ -1,5 +1,22 @@
 # 오늘의 실패
 
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://todaysfail.com">
+        <img src="https://user-images.githubusercontent.com/64088250/221521867-989b2295-9104-4a9d-9343-0d6f1196ab07.png" width="300px"/>
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      오늘의 실패를 영수증으로 남겨보세요
+    </td>
+  </tr>
+</table>
+
+### 🧾 소개
+
 바쁜 일상을 살아가다보면 어쩔 수 없이 성공과 효율에만 집중하게 됩니다.</br>
 
 그런 강박 때문에 작은 도전도 하기 힘들때가 있습니다.</br>
@@ -12,7 +29,8 @@
 
 ![image](https://user-images.githubusercontent.com/64088250/221423025-f5413792-73a0-4872-8e56-9877acd37991.png)
 
-### 🏠스프린트 팀원
+### 🏠 스프린트 팀원
+
 
 <table>
   <tr>
