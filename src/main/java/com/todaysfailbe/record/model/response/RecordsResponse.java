@@ -25,13 +25,17 @@ public class RecordsResponse {
 	@ApiModelProperty(value = "영수증 날짜", required = true, example = "FEBRUARY 02 - 27, 2023")
 	private String receiptDate;
 
-	private RecordsResponse(LocalDate date, List<RecordDto> records, String receiptDate) {
+	@ApiModelProperty(value = "실패 기록 총 개수", required = true, example = "19")
+	private Integer total;
+
+	private RecordsResponse(LocalDate date, List<RecordDto> records, String receiptDate, Integer total) {
 		this.date = date;
 		this.records = records;
 		this.receiptDate = receiptDate;
+		this.total = total;
 	}
 
-	public static RecordsResponse from(LocalDate date, List<RecordDto> records, String receiptDate) {
-		return new RecordsResponse(date, records, receiptDate);
+	public static RecordsResponse from(LocalDate date, List<RecordDto> records, String receiptDate, Integer total) {
+		return new RecordsResponse(date, records, receiptDate, total);
 	}
 }
