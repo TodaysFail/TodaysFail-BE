@@ -31,6 +31,7 @@ public class RecordDto {
 	@ApiModelProperty(value = "실패 기록 시:분:초", required = true, example = "19:31:51")
 	private String createdAt;
 
+	@ApiModelProperty(value = "실패 기록한 회원 정보", required = true)
 	private MemberDto member;
 
 	public RecordDto(Long id, String title, String content, String feel, String createdAt, MemberDto member) {
