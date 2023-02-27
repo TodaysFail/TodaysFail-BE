@@ -1,5 +1,7 @@
 package com.todaysfailbe.record.service;
 
+import static com.todaysfailbe.common.utils.DateTimeUtil.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,7 +12,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.todaysfailbe.common.utils.DateTimeUtil;
 import com.todaysfailbe.member.domain.Member;
 import com.todaysfailbe.member.model.response.MemberDto;
 import com.todaysfailbe.member.repository.MemberRepository;
@@ -57,12 +58,12 @@ public class RecordService {
 					.map(record ->
 							RecordDto.from(
 									record,
-									DateTimeUtil.hourMinuteSecondConversion(record.getCreatedAt()),
+									hourMinuteSecondConversion(record.getCreatedAt()),
 									MemberDto.from(record.getMember())
 							)
 					).collect(Collectors.toList());
 			records.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
-			response.add(RecordsResponse.from(date, records));
+			response.add(RecordsResponse.from(date, records, yearMonthDateConversion(date)));
 		}
 
 		response.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
@@ -78,7 +79,7 @@ public class RecordService {
 		if (request.getDate() != null) {
 			LocalDate date = request.getDate();
 			ConcurrentMap<LocalDate, List<Record>> map = recordRepository.findAllByMemberAndCreatedAtBetween(member,
-							DateTimeUtil.getStartOfDay(date), DateTimeUtil.getEndOfDay(date))
+							getStartOfDay(date), getEndOfDay(date))
 					.stream()
 					.collect(Collectors.groupingByConcurrent(
 									record -> {
