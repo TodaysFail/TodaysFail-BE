@@ -63,7 +63,7 @@ public class RecordService {
 							)
 					).collect(Collectors.toList());
 			records.sort((o1, o2) -> o2.getCreatedAt().compareTo(o1.getCreatedAt()));
-			response.add(RecordsResponse.from(date, records, yearMonthDateConversion(date)));
+			response.add(RecordsResponse.from(date, records, yearMonthDateConversion(date), records.size()));
 		}
 
 		response.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
