@@ -47,15 +47,10 @@ public class RecordService {
 		log.info("[RecordService.getRecords] 레코드 목록 조회 요청");
 		Member member = memberRepository.findByName(request.getWriter())
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-		ConcurrentMap<LocalDate, List<Record>> map = recordRepository.findAllByMember(member).stream()
-				.collect(Collectors.groupingByConcurrent(
-						record -> {
-							LocalDateTime dateTime = record.getCreatedAt();
-							return LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
-						}
-				));
 
 		List<RecordsResponse> response = new ArrayList<>();
+
+		ConcurrentMap<LocalDate, List<Record>> map = ifThereIsADateSearchByDateGetList(request, member);
 
 		for (LocalDate date : map.keySet()) {
 			List<RecordDto> records = map.get(date).stream()
@@ -74,6 +69,37 @@ public class RecordService {
 
 		log.info("[RecordService.getRecords] 레코드 목록 조회 성공");
 		return response;
+	}
+
+	private ConcurrentMap<LocalDate, List<Record>> ifThereIsADateSearchByDateGetList(
+			RecordsRequest request,
+			Member member
+	) {
+		if (request.getDate() != null) {
+			LocalDate date = request.getDate();
+			ConcurrentMap<LocalDate, List<Record>> map = recordRepository.findAllByMemberAndCreatedAtBetween(member,
+							DateTimeUtil.getStartOfDay(date), DateTimeUtil.getEndOfDay(date))
+					.stream()
+					.collect(Collectors.groupingByConcurrent(
+									record -> {
+										LocalDateTime dateTime = record.getCreatedAt();
+										return LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
+									}
+							)
+					);
+			return map;
+		}
+
+		ConcurrentMap<LocalDate, List<Record>> map = recordRepository.findAllByMember(member)
+				.stream()
+				.collect(Collectors.groupingByConcurrent(
+								record -> {
+									LocalDateTime dateTime = record.getCreatedAt();
+									return LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
+								}
+						)
+				);
+		return map;
 	}
 
 	@Transactional
