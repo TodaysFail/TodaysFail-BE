@@ -15,10 +15,10 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class MemberDto {
-	@ApiModelProperty(value = "실패 기록한 회원 정보", required = true, example = "1")
+	@ApiModelProperty(value = "회원 ID", required = true, example = "1")
 	private Long id;
 
-	@ApiModelProperty(value = "실패 기록한 회원 정보", required = true, example = "도모")
+	@ApiModelProperty(value = "회원 이름", required = true, example = "도모")
 	private String name;
 
 	private MemberDto(Long id, String name) {
