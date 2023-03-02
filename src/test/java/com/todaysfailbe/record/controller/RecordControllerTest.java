@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,8 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
+import com.todaysfailbe.record.model.request.DeleteRecordRequest;
 import com.todaysfailbe.record.service.RecordService;
 
 @WebMvcTest(RecordController.class)
@@ -28,9 +27,6 @@ class RecordControllerTest {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-
-	@Mock
-	private Record mockRecord;
 
 	@Nested
 	@DisplayName("레코드를 생성할 때")
@@ -202,4 +198,39 @@ class RecordControllerTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("실패기록을 삭제할 때")
+	class 실패기록을_삭제할_때 {
+		@Test
+		@DisplayName("작성자를 입력하지 않았다면 예외가 발생한다.")
+		void 작성자를_입력하지_않았다면_예외가_발생한다() throws Exception {
+			// given
+
+			// when, then
+			mockMvc.perform(delete("/api/v1/record")
+							.contentType(MediaType.APPLICATION_JSON)
+							.param("recordId", "1"))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("작성자는 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("BindException"));
+		}
+
+		@Test
+		@DisplayName("실패 기록 ID를 입력하지 않았다면 예외가 발생한다.")
+		void 실패_기록_ID를_입력하지_않았다면_예외가_발생한다() throws Exception {
+			// given
+			DeleteRecordRequest deleteRecordRequest = DeleteRecordRequest.builder()
+					.writer("도모")
+					.build();
+
+			// when, then
+			mockMvc.perform(delete("/api/v1/record")
+							.contentType(MediaType.APPLICATION_JSON)
+							.param("writer", "도모"))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("실패 기록 ID는 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("BindException"));
+		}
+
+	}
 }
