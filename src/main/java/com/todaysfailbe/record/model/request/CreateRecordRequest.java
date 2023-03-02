@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRecordRequest {
-	@NotBlank(message = "작성자을 필수입니다.")
+	@NotBlank(message = "작성자는 필수입니다.")
 	@ApiModelProperty(value = "작성자", required = true, example = "도모")
 	private String writer;
 
