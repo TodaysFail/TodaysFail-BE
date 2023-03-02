@@ -29,8 +29,8 @@ class RecordControllerTest {
 	private ObjectMapper objectMapper;
 
 	@Nested
-	@DisplayName("레코드를 생성할 때")
-	class 레코드를_생성할_때 {
+	@DisplayName("실패기록을 생성할 때")
+	class 실패기록을_생성할_때 {
 		@Test
 		@DisplayName("작성자를 입력하지 않았다면 예외가 발생한다.")
 		void 작성자를_입력하지_않았다면_예외가_발생한다() throws Exception {
