@@ -3,6 +3,9 @@ package com.todaysfailbe.record.service;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.BDDMockito.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +23,7 @@ import com.todaysfailbe.member.repository.MemberRepository;
 import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
+import com.todaysfailbe.record.model.request.RecordsRequest;
 import com.todaysfailbe.record.repository.RecordRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -177,6 +181,70 @@ class RecordServiceTest {
 			verify(memberRepository, times(1)).findByName(anyString());
 			verify(recordRepository, times(1)).findById(anyLong());
 			verify(recordRepository, times(1)).delete(recordCaptor.capture());
+		}
+	}
+
+	@Nested
+	class 레코드를_조회할_때 {
+		@Test
+		@DisplayName("닉네임으로 회원을 조회 시 찾을 수 없다면 예외를 발생시킨다")
+		void 닉네임으로_회원을_조회_시_찾을_수_없다면_예외를_발생시킨다() {
+			// given
+			RecordsRequest request = mock(RecordsRequest.class);
+			given(request.getWriter())
+					.willReturn("도모");
+			given(memberRepository.findByName(anyString()))
+					.willReturn(Optional.empty());
+
+			// when, then
+			assertThatThrownBy(() -> recordService.getRecords(request))
+					.isInstanceOf(IllegalArgumentException.class);
+			verify(memberRepository, times(1)).findByName(anyString());
+		}
+
+		@Test
+		@DisplayName("날짜가 있다면 날짜에 해당하는 실패 기록만 조회한다")
+		void 날짜가_있다면_날짜에_해당하는_실패_기록만_조회한다() {
+			// given
+			RecordsRequest request = mock(RecordsRequest.class);
+			given(request.getWriter())
+					.willReturn("도모");
+			given(request.getDate())
+					.willReturn(null);
+			given(memberRepository.findByName(anyString()))
+					.willReturn(Optional.of(mockMember));
+
+			// when, then
+			assertThatCode(() -> recordService.getRecords(request))
+					.doesNotThrowAnyException();
+
+			verify(memberRepository, times(1)).findByName(anyString());
+			verify(recordRepository, times(1)).findAllByMember(mockMember);
+		}
+
+		@Test
+		@DisplayName("날짜가 없다면 모든 날짜에 해당하는 실패 기록만 조회한다")
+		void 날짜가_없다면_모든_날짜에_해당하는_실패_기록만_조회한다() {
+			// given
+			RecordsRequest request = mock(RecordsRequest.class);
+			LocalDate date = LocalDate.now();
+			given(request.getWriter())
+					.willReturn("도모");
+			given(request.getDate())
+					.willReturn(date);
+			given(memberRepository.findByName(anyString()))
+					.willReturn(Optional.of(mockMember));
+
+			// when, then
+			assertThatCode(() -> recordService.getRecords(request))
+					.doesNotThrowAnyException();
+
+			verify(memberRepository, times(1)).findByName(anyString());
+			verify(recordRepository, times(1)).findAllByMemberAndCreatedAtBetween(
+					mockMember,
+					LocalDateTime.of(date, LocalTime.MIN),
+					LocalDateTime.of(date, LocalTime.MAX)
+			);
 		}
 	}
 
