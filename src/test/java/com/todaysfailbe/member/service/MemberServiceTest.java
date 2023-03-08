@@ -70,4 +70,37 @@ class MemberServiceTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("닉네임 중복체크할 때")
+	class 닉네임_중복체크할_때 {
+		@Test
+		@DisplayName("중복된다면 true를 반환한다.")
+		void 중복된다면_true를_반환한다() {
+			// given
+			given(memberRepository.existsByName(anyString()))
+					.willReturn(true);
+
+			// when
+			Boolean result = memberService.checkDuplicateName("지우");
+
+			// then
+			assertThat(result).isTrue();
+			verify(memberRepository, times(1)).existsByName(anyString());
+		}
+
+		@Test
+		@DisplayName("중복되지 않는다면 false를 반환한다.")
+		void 중복되지_않는다면_false를_반환한다() {
+			// given
+			given(memberRepository.existsByName(anyString()))
+					.willReturn(false);
+
+			// when
+			Boolean result = memberService.checkDuplicateName("지우");
+
+			// then
+			assertThat(result).isFalse();
+			verify(memberRepository, times(1)).existsByName(anyString());
+		}
+	}
 }
