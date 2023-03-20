@@ -112,4 +112,20 @@ public class RecordService {
 		recordRepository.delete(record);
 		log.info("[RecordService.deleteRecord] 레코드 삭제 성공");
 	}
+
+	public RecordDto getRecord(Long recordId) {
+		log.info("[RecordService.getRecord] 레코드 단 건 조회 요청");
+		Record record = recordRepository.findById(recordId)
+				.orElseThrow(() -> {
+					log.info("[RecordService.getRecord] 레코드 단 건 조회 실패 - 존재하지 않는 레코드: {}", recordId);
+					throw new IllegalArgumentException("존재하지 않는 레코드입니다.");
+				});
+		RecordDto recordDto = RecordDto.from(
+				record,
+				hourMinuteSecondConversion(record.getCreatedAt()),
+				MemberDto.from(record.getMember())
+		);
+		log.info("[RecordService.getRecord] 레코드 단 건 조회 성공");
+		return recordDto;
+	}
 }
