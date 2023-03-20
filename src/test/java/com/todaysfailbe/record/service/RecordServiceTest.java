@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.mockito.BDDMockito.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -22,10 +23,12 @@ import com.todaysfailbe.member.repository.MemberRepository;
 import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
+import com.todaysfailbe.record.model.response.RecordDto;
 import com.todaysfailbe.record.repository.RecordRepository;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
+@DisplayName("RecordService 테스트")
 class RecordServiceTest {
 	@Mock
 	private MemberRepository memberRepository;
@@ -174,7 +177,7 @@ class RecordServiceTest {
 	}
 
 	@Nested
-	class 레코드를_조회할_때 {
+	class 레코드를_여러_건_조회할_때 {
 		@Test
 		@DisplayName("회원을 조회 시 찾을 수 없다면 예외를 발생시킨다")
 		void 회원을_조회_시_찾을_수_없다면_예외를_발생시킨다() {
@@ -190,7 +193,7 @@ class RecordServiceTest {
 
 		@Test
 		@DisplayName("모든 날짜에 해당하는 실패 기록만 조회한다")
-		void 모든_날짜에_해당하는_실패_기록만_조회한다() {
+		void 모든_날짜에_해당하는_건실패_기록만_조회한다() {
 			// given
 			LocalDate date = LocalDate.now();
 			given(memberRepository.findById(anyLong()))
@@ -202,6 +205,64 @@ class RecordServiceTest {
 
 			verify(memberRepository, times(1)).findById(anyLong());
 			verify(recordRepository, times(1)).findAllByMember(mockMember);
+		}
+	}
+
+	@Nested
+	class 레코드를_단_건_조회할_때 {
+		@Test
+		@DisplayName("레코드 조회 시 찾을 수 없다면 예외를 발생시킨다")
+		void 레코드_조회_시_찾을_수_없다면_예외를_발생시킨다() {
+			// given
+			given(recordRepository.findById(anyLong()))
+					.willReturn(Optional.empty());
+			// when, then
+			assertThatThrownBy(() -> recordService.getRecord(anyLong()))
+					.isInstanceOf(IllegalArgumentException.class);
+			verify(recordRepository, times(1)).findById(anyLong());
+		}
+
+		@Test
+		@DisplayName("레코드 조회 시 찾을 수 있다면 예외를 발생시키지 않는다")
+		void 레코드_조회_시_찾을_수_있다면_예외를_발생시키지_않는다() {
+			// given
+			LocalDateTime localDateTime = LocalDateTime.of(2021, 1, 1, 18, 0, 0);
+			given(recordRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockRecord));
+
+			given(mockRecord.getMember())
+					.willReturn(mockMember);
+			given(mockRecord.getCreatedAt())
+					.willReturn(localDateTime);
+
+			given(mockMember.getId())
+					.willReturn(18234L);
+			given(mockMember.getName())
+					.willReturn("도모");
+
+			given(mockRecord.getId())
+					.willReturn(3142L);
+			given(mockRecord.getTitle())
+					.willReturn("핫케이크 태움");
+			given(mockRecord.getContent())
+					.willReturn("핫케이크를 타다가 불이 났다.");
+			given(mockRecord.getFeel())
+					.willReturn("다음에 더 잘하면 된다");
+
+			// when, then
+			assertThatCode(() -> recordService.getRecord(anyLong()))
+					.doesNotThrowAnyException();
+
+			RecordDto recordDto = recordService.getRecord(anyLong());
+
+			assertThat(recordDto.getMember().getId()).isEqualTo(18234L);
+			assertThat(recordDto.getMember().getName()).isEqualTo("도모");
+
+			assertThat(recordDto.getId()).isEqualTo(3142L);
+			assertThat(recordDto.getTitle()).isEqualTo("핫케이크 태움");
+			assertThat(recordDto.getContent()).isEqualTo("핫케이크를 타다가 불이 났다.");
+			assertThat(recordDto.getFeel()).isEqualTo("다음에 더 잘하면 된다");
+			assertThat(recordDto.getCreatedAt()).isEqualTo("18:00:00");
 		}
 	}
 

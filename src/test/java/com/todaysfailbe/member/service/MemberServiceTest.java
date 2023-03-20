@@ -22,6 +22,7 @@ import com.todaysfailbe.member.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
+@DisplayName("MemberService 테스트")
 class MemberServiceTest {
 	@Mock
 	private MemberRepository memberRepository;

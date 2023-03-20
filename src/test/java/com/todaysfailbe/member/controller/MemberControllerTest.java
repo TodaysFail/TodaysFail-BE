@@ -22,6 +22,7 @@ import com.todaysfailbe.member.model.response.MemberDto;
 import com.todaysfailbe.member.service.MemberService;
 
 @WebMvcTest(MemberController.class)
+@DisplayName("MemberController 테스트")
 class MemberControllerTest {
 	@MockBean
 	private MemberService memberService;

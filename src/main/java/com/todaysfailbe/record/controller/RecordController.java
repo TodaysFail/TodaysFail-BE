@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
+import com.todaysfailbe.record.model.response.RecordDto;
 import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.service.RecordService;
 
@@ -65,6 +67,26 @@ public class RecordController {
 		log.info("[RecordController.getRecords] 레코드 목록 조회 요청");
 		List<RecordsResponse> response = recordService.getRecords();
 		log.info("[RecordController.getRecords] 레코드 목록 조회 성공");
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
+	@ApiOperation(
+			value = "실패 기록 단 건 조회합니다",
+			notes = "요청한 ID의 실패 기록을 조회합니다"
+	)
+	@ApiResponses({
+			@ApiResponse(
+					code = 200, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
+			),
+			@ApiResponse(
+					code = 400, message = "존재하지 않는 실패 기록인 경우입니다"
+			)
+	})
+	@GetMapping("/{recordId}")
+	public ResponseEntity<RecordDto> getRecord(@PathVariable Long recordId) {
+		log.info("[RecordController.getRecord] 레코드 단 건 조회 요청");
+		RecordDto response = recordService.getRecord(recordId);
+		log.info("[RecordController.getRecord] 레코드 단 건 조회 성공");
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
