@@ -21,6 +21,15 @@ public class GlobalExceptionHandler {
 				.body(ErrorMessage.from(exception, message));
 	}
 
+	@ExceptionHandler(NotFoundUserInfoInSessionException.class)
+	public ResponseEntity<ErrorMessage> handleNotFoundUserInfoInSessionException(
+			NotFoundUserInfoInSessionException exception) {
+		String message = exception.getMessage();
+
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+				.body(ErrorMessage.from(exception, message));
+	}
+
 	@ExceptionHandler(IllegalArgumentException.class)
 	public ResponseEntity<ErrorMessage> handleIllegalArgumentException(
 			IllegalArgumentException exception) {

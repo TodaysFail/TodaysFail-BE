@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.todaysfailbe.member.model.request.CreateMemberRequest;
+import com.todaysfailbe.member.model.request.LoginMemberRequest;
+import com.todaysfailbe.member.model.response.MemberDto;
 import com.todaysfailbe.member.service.MemberService;
 
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +49,43 @@ public class MemberController {
 	}
 
 	@ApiOperation(
+			value = "로그인",
+			notes = "닉네임과 비밀번호를 입력받아 로그인을 진행합니다"
+	)
+	@ApiResponses({
+			@ApiResponse(
+					code = 200, message = "API 정상 작동 / 로그인 완료"
+			),
+			@ApiResponse(
+					code = 400, message = "닉네임이나 비밀번호가 틀렸을 경우입니다"
+			)
+	})
+	@PostMapping("/login")
+	public ResponseEntity<Void> loginMember(@RequestBody @Valid LoginMemberRequest loginMemberRequest) {
+		log.info("[MemberController.loginMember] 회원 로그인 요청: {}", loginMemberRequest);
+		memberService.loginMember(loginMemberRequest);
+		log.info("[MemberController.loginMember] 회원 로그인 성공: {}", loginMemberRequest);
+		return ResponseEntity.ok().build();
+	}
+
+	@ApiOperation(
+			value = "로그아웃",
+			notes = "로그아웃을 진행합니다"
+	)
+	@ApiResponses({
+			@ApiResponse(
+					code = 200, message = "API 정상 작동 / 로그아웃 완료"
+			)
+	})
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logoutMember() {
+		log.info("[MemberController.logoutMember] 회원 로그아웃 요청");
+		memberService.logoutMember();
+		log.info("[MemberController.logoutMember] 회원 로그아웃 성공");
+		return ResponseEntity.ok().build();
+	}
+
+	@ApiOperation(
 			value = "닉네임 중복 체크",
 			notes = "닉네임 중복체크를 진행합니다. 중복되었다면 true, 중복되지 않았다면 false를 반환합니다"
 	)
@@ -59,5 +98,13 @@ public class MemberController {
 	public ResponseEntity<Boolean> checkDuplicateName(@PathVariable String name) {
 		log.info("[MemberController.checkDuplicateName] 중복 이름 체크 요청: {}", name);
 		return ResponseEntity.ok(memberService.checkDuplicateName(name));
+	}
+
+	@GetMapping("/info")
+	public ResponseEntity<MemberDto> getMemberInfo() {
+		log.info("[MemberController.getMemberInfo] 회원 정보 조회 요청");
+		MemberDto memberDto = memberService.getMemberInfo();
+		log.info("[MemberController.getMemberInfo] 회원 정보 조회 성공: {}", memberDto);
+		return ResponseEntity.ok(memberService.getMemberInfo());
 	}
 }

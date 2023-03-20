@@ -13,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.todaysfailbe.common.utils.EncryptUtil;
+import com.todaysfailbe.common.utils.SessionUtil;
 import com.todaysfailbe.member.domain.Member;
 import com.todaysfailbe.member.exception.DuplicateNameException;
 import com.todaysfailbe.member.model.request.CreateMemberRequest;
@@ -23,6 +25,12 @@ import com.todaysfailbe.member.repository.MemberRepository;
 class MemberServiceTest {
 	@Mock
 	private MemberRepository memberRepository;
+
+	@Mock
+	private EncryptUtil encryptUtil;
+
+	@Mock
+	private SessionUtil sessionUtil;
 
 	@InjectMocks
 	private MemberService memberService;
@@ -57,7 +65,10 @@ class MemberServiceTest {
 			// given
 			CreateMemberRequest createMemberRequest = mock(CreateMemberRequest.class);
 			given(createMemberRequest.getName()).willReturn("주니");
+			given(createMemberRequest.getPassword()).willReturn("1234");
 
+			given(encryptUtil.encrypt(anyString()))
+					.willReturn("encrypted password");
 			given(memberRepository.save(any()))
 					.willReturn(mockMember);
 
