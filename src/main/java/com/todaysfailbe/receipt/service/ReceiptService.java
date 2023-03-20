@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.todaysfailbe.common.utils.SessionUtil;
 import com.todaysfailbe.member.domain.Member;
 import com.todaysfailbe.member.repository.MemberRepository;
 import com.todaysfailbe.receipt.domain.Receipt;
@@ -27,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class ReceiptService {
+	private final SessionUtil sessionUtil;
 	private final ReceiptRepository receiptRepository;
 	private final RecordRepository recordRepository;
 	private final MemberRepository memberRepository;
@@ -34,8 +36,12 @@ public class ReceiptService {
 	@Transactional
 	public String createReceipt(CreateReceiptRequest request) {
 		log.info("[ReceiptService.createReceipt] 영수증 등록 요청: {}", request);
-		Member member = memberRepository.findByName(request.getWriter())
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+		Long userIdBySession = sessionUtil.findUserIdBySession();
+		Member member = memberRepository.findById(userIdBySession)
+				.orElseThrow(() -> {
+					log.info("[ReceiptService.createReceipt] 영수증 등록 실패 - 존재하지 않는 회원: {}", userIdBySession);
+					throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+				});
 
 		LocalDateTime start = getStartOfDay(request.getDate());
 		LocalDateTime end = getEndOfDay(request.getDate());
@@ -45,7 +51,7 @@ public class ReceiptService {
 				.collect(Collectors.toList());
 
 		if (list.size() == 0) {
-			log.info("[ReceiptService.createReceipt] 해당 날짜에 해당하는 실패 기록이 없습니다: {}", request);
+			log.info("[ReceiptService.createReceipt] 영수증 등록 실패 - 해당 날짜에 해당하는 실패 기록이 없음: {}", request);
 			throw new IllegalArgumentException("해당 날짜에 해당하는 실패 기록이 없습니다.");
 		}
 
@@ -57,7 +63,10 @@ public class ReceiptService {
 	public ReceiptResponse getReceipt(String receiptId) {
 		log.info("[ReceiptService.getReceipt] 영수증 조회 요청: {}", receiptId);
 		Receipt receipt = receiptRepository.findById(UUID.fromString(receiptId))
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 영수증입니다."));
+				.orElseThrow(() -> {
+					log.info("[ReceiptService.getReceipt] 영수증 조회 실패 - 존재하지 않는 영수증: {}", receiptId);
+					throw new IllegalArgumentException("존재하지 않는 영수증입니다.");
+				});
 
 		List<ReceiptDto> receiptDtoList = recordRepository.findAllById(receipt.getRecordIds())
 				.stream()

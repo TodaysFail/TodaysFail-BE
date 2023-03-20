@@ -8,7 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      ENCRYPT_SALT: ${{ secrets.TEST_ENCRYPT_SALT }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2

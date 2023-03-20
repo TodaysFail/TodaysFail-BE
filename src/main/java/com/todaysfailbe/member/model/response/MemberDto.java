@@ -18,7 +18,7 @@ public class MemberDto {
 	@ApiModelProperty(value = "회원 ID", required = true, example = "1")
 	private Long id;
 
-	@ApiModelProperty(value = "회원 이름", required = true, example = "도모")
+	@ApiModelProperty(value = "회원 닉네임", required = true, example = "도모")
 	private String name;
 
 	private MemberDto(Long id, String name) {

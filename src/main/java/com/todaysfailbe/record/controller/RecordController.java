@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
-import com.todaysfailbe.record.model.request.RecordsRequest;
 import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.service.RecordService;
 
@@ -54,34 +53,31 @@ public class RecordController {
 
 	@ApiOperation(
 			value = "실패 기록들을 조회합니다",
-			notes = "닉네임을 받아 해당 닉네임의 실패 기록들을 조회합니다"
+			notes = "사용자의 실패 기록들을 조회합니다"
 	)
 	@ApiResponses({
 			@ApiResponse(
 					code = 200, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
-			),
-			@ApiResponse(
-					code = 400, message = "입력 값이 잘못되었을 경우입니다"
 			)
 	})
 	@GetMapping
-	public ResponseEntity<List<RecordsResponse>> getRecords(@Valid RecordsRequest recordsRequest) {
+	public ResponseEntity<List<RecordsResponse>> getRecords() {
 		log.info("[RecordController.getRecords] 레코드 목록 조회 요청");
-		List<RecordsResponse> response = recordService.getRecords(recordsRequest);
+		List<RecordsResponse> response = recordService.getRecords();
 		log.info("[RecordController.getRecords] 레코드 목록 조회 성공");
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@ApiOperation(
 			value = "실패 기록을 삭제합니다.",
-			notes = "닉네임과 실패 기록의 ID를 받아 해당 실패 기록을 삭제합니다."
+			notes = "기록의 ID를 받아 해당 실패 기록을 삭제합니다."
 	)
 	@ApiResponses({
 			@ApiResponse(
 					code = 200, message = "API 정상 작동 / 실패 기록 목록 조회 성공"
 			),
 			@ApiResponse(
-					code = 400, message = "해당 실패 기록이 존재하지 않거나 해당 실패 기록이 해당 닉네임의 것이 아닐 경우입니다."
+					code = 400, message = "존재하지 않는 실패 기록이거나 혹은 권한이 없는 경우입니다"
 			)
 	})
 	@DeleteMapping
