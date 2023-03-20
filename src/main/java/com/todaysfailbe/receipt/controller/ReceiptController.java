@@ -37,7 +37,7 @@ public class ReceiptController {
 					code = 201, message = "API 정상 작동 / 영수증 등록 완료"
 			),
 			@ApiResponse(
-					code = 400, message = "중복 된 닉네임이 있을 경우입니다"
+					code = 400, message = "해당 날짜에 해당하는 실패 기록이 없는 경우입니다."
 			)
 	})
 	@PostMapping
@@ -57,7 +57,7 @@ public class ReceiptController {
 					code = 200, message = "API 정상 작동 / 영수증 조회 완료"
 			),
 			@ApiResponse(
-					code = 400, message = "영수증 번호가 잘못된 경우입니다."
+					code = 400, message = "존재하지 않는 영수증 번호일 경우입니다."
 			)
 	})
 	@GetMapping("/{receiptId}")

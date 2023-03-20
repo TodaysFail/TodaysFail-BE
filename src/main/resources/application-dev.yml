@@ -2,7 +2,6 @@ spring:
   config:
     activate:
       on-profile: "dev"
-
   jpa:
     open-in-view: true
     hibernate:
@@ -13,3 +12,5 @@ spring:
     properties:
       hibernate:
         format_sql: true
+encrypt:
+  salt: ${ENCRYPT_SALT}

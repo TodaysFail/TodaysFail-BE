@@ -18,10 +18,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRecordRequest {
-	@NotBlank(message = "작성자는 필수입니다.")
-	@ApiModelProperty(value = "작성자", required = true, example = "도모")
-	private String writer;
-
 	@NotBlank(message = "제목은 필수입니다.")
 	@Size(max = 17, message = "제목은 17자 이하로 입력해주세요.")
 	@ApiModelProperty(value = "제목", required = true, example = "핫케이크 태움")

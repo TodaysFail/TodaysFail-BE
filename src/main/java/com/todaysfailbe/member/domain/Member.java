@@ -30,12 +30,17 @@ public class Member extends BaseEntity {
 	@Column(name = "NAME")
 	private String name;
 
-	private Member(String name) {
+	@Column(name = "PASSWORD")
+	private String password;
+
+	private Member(String name, String password) {
 		Assert.hasText(name, "이름은 필수입니다.");
+		Assert.hasText(password, "비밀번호는 필수입니다.");
 		this.name = name;
+		this.password = password;
 	}
 
 	public static Member from(CreateMemberRequest request) {
-		return new Member(request.getName());
+		return new Member(request.getName(), request.getPassword());
 	}
 }
