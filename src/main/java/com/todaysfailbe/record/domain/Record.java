@@ -16,6 +16,7 @@ import org.springframework.util.Assert;
 import com.todaysfailbe.common.domain.BaseEntity;
 import com.todaysfailbe.member.domain.Member;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
+import com.todaysfailbe.record.model.request.UpdateRecordRequest;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,5 +63,11 @@ public class Record extends BaseEntity {
 				request.getContent(),
 				request.getFeel()
 		);
+	}
+
+	public void update(UpdateRecordRequest updateRecordRequest) {
+		this.title = updateRecordRequest.getTitle();
+		this.content = updateRecordRequest.getContent();
+		this.feel = updateRecordRequest.getFeel();
 	}
 }
