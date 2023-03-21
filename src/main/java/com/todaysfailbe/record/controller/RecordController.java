@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
+import com.todaysfailbe.record.model.request.UpdateRecordRequest;
 import com.todaysfailbe.record.model.response.RecordDto;
 import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.service.RecordService;
@@ -103,10 +105,18 @@ public class RecordController {
 			)
 	})
 	@DeleteMapping
-	ResponseEntity<Void> deleteRecord(@Valid DeleteRecordRequest deleteRecordRequest) {
+	public ResponseEntity<Void> deleteRecord(@Valid DeleteRecordRequest deleteRecordRequest) {
 		log.info("[RecordController.deleteRecord] 레코드 삭제 요청");
 		recordService.deleteRecord(deleteRecordRequest);
 		log.info("[RecordController.deleteRecord] 레코드 삭제 성공");
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+
+	@PutMapping
+	public ResponseEntity<Void> updateRecord(@RequestBody @Valid UpdateRecordRequest updateRecordRequest) {
+		log.info("[RecordController.updateRecord] 레코드 수정 요청");
+		recordService.updateRecord(updateRecordRequest);
+		log.info("[RecordController.updateRecord] 레코드 수정 성공");
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
