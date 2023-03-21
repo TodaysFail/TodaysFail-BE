@@ -23,6 +23,7 @@ import com.todaysfailbe.member.domain.Member;
 import com.todaysfailbe.member.model.response.MemberDto;
 import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
+import com.todaysfailbe.record.model.request.UpdateRecordRequest;
 import com.todaysfailbe.record.model.response.RecordDto;
 import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.service.RecordService;
@@ -335,6 +336,104 @@ class RecordControllerTest {
 					.andExpect(jsonPath("$.createdAt").value("19:31:51"))
 					.andExpect(jsonPath("$.member.id").value(857))
 					.andExpect(jsonPath("$.member.name").value("도모"))
+					.andDo(print());
+		}
+	}
+
+	@Nested
+	@DisplayName("실패 기록을 수정할 때")
+	class 실패_기록을_수정할_때 {
+		@Test
+		@DisplayName("실패 기록 ID를 입력하지 않았다면 예외를 발생시킨다.")
+		void 실패_기록_ID를_입력하지_않았다면_예외를_발생시킨다() throws Exception {
+			// given
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.title("핫케이크 태움")
+					.content("핫케이크를 타다가 불이 났다.")
+					.feel("다음에 더 잘하면 된다")
+					.build();
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("실패 기록 ID는 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
+		@DisplayName("제목을 입력하지 않았다면 예외를 발생시킨다.")
+		void 제목을_입력하지_않았다면_예외를_발생시킨다() throws Exception {
+			// given
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.content("핫케이크를 타다가 불이 났다.")
+					.feel("다음에 더 잘하면 된다")
+					.build();
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("제목은 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
+		@DisplayName("내용을 입력하지 않았다면 예외를 발생시킨다.")
+		void 내용을_입력하지_않았다면_예외를_발생시킨다() throws Exception {
+			// given
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.title("핫케이크 태움")
+					.feel("다음에 더 잘하면 된다")
+					.build();
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("내용은 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
+		@DisplayName("느낀점을 입력하지 않았다면 예외를 발생시킨다.")
+		void 느낀점을_입력하지_않았다면_예외를_발생시킨다() throws Exception {
+			// given
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.title("핫케이크 태움")
+					.content("핫케이크를 타다가 불이 났다.")
+					.build();
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("느낀점은 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
+		@DisplayName("입력 값이 정상이면 200 응답을 받는다.")
+		void 입력_값이_정상이면_200_응답을_받는다() throws Exception {
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.title("핫케이크 태움")
+					.content("핫케이크를 타다가 불이 났다.")
+					.feel("다음에 더 잘하면 된다")
+					.build();
+			
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isOk())
 					.andDo(print());
 		}
 	}

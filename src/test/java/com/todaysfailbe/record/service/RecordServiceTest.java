@@ -23,6 +23,7 @@ import com.todaysfailbe.member.repository.MemberRepository;
 import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
+import com.todaysfailbe.record.model.request.UpdateRecordRequest;
 import com.todaysfailbe.record.model.response.RecordDto;
 import com.todaysfailbe.record.repository.RecordRepository;
 
@@ -264,6 +265,96 @@ class RecordServiceTest {
 			assertThat(recordDto.getFeel()).isEqualTo("다음에 더 잘하면 된다");
 			assertThat(recordDto.getCreatedAt()).isEqualTo("18:00:00");
 		}
+	}
+
+	@Nested
+	class 회원_정보를_수정할_때 {
+		@Test
+		@DisplayName("회원을 조회 시 찾을 수 없다면 예외를 발생시킨다")
+		void 회원을_조회_시_찾을_수_없다면_예외를_발생시킨다() {
+			// given
+			UpdateRecordRequest request = mock(UpdateRecordRequest.class);
+			// when, then
+			assertThatThrownBy(() -> recordService.updateRecord(request))
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessage("존재하지 않는 회원입니다.");
+			verify(memberRepository, times(1)).findById(anyLong());
+		}
+
+		@Test
+		@DisplayName("레코드를 조회 시 찾을 수 없다면 예외를 발생시킨다")
+		void 레코드를_조회_시_찾을_수_없다면_예외를_발생시킨다() {
+			// given
+			UpdateRecordRequest request = mock(UpdateRecordRequest.class);
+			given(memberRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockMember));
+			given(recordRepository.findById(anyLong()))
+					.willReturn(Optional.empty());
+			// when, then
+			assertThatThrownBy(() -> recordService.updateRecord(request))
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessage("존재하지 않는 레코드입니다.");
+			verify(memberRepository, times(1)).findById(anyLong());
+			verify(recordRepository, times(1)).findById(anyLong());
+		}
+
+		@Test
+		@DisplayName("권한이 없다면 예외를 발생시킨다")
+		void 권한이_없다면_예외를_발생시킨다() {
+			// given
+			UpdateRecordRequest request = mock(UpdateRecordRequest.class);
+			Member otherMember = mock(Member.class);
+			given(memberRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockMember));
+			given(recordRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockRecord));
+			given(mockRecord.getMember())
+					.willReturn(otherMember);
+
+			// when, then
+			assertThatThrownBy(() -> recordService.updateRecord(request))
+					.isInstanceOf(IllegalArgumentException.class)
+					.hasMessage("해당 레코드를 수정할 권한이 없습니다.");
+		}
+
+		@Test
+		@DisplayName("권한이 있다면 예외를 발생시키지 않는다")
+		void 권한이_있다면_예외를_발생시키지_않는다() {
+			// given
+			UpdateRecordRequest request = mock(UpdateRecordRequest.class);
+			Member otherMember = mock(Member.class);
+			given(memberRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockMember));
+			given(recordRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockRecord));
+			given(mockRecord.getMember())
+					.willReturn(mockMember);
+
+			// when, then
+			assertThatCode(() -> recordService.updateRecord(request))
+					.doesNotThrowAnyException();
+		}
+
+		@Test
+		@DisplayName("정상이라면 레코드를 수정한다")
+		void 정상이라면_레코드를_수정한다() {
+			// given
+			UpdateRecordRequest request = mock(UpdateRecordRequest.class);
+			given(memberRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockMember));
+			given(recordRepository.findById(anyLong()))
+					.willReturn(Optional.of(mockRecord));
+			given(mockRecord.getMember())
+					.willReturn(mockMember);
+
+			// when
+			assertThatCode(() -> recordService.updateRecord(request))
+					.doesNotThrowAnyException();
+			verify(memberRepository, times(1)).findById(anyLong());
+			verify(recordRepository, times(1)).findById(anyLong());
+			verify(mockRecord, times(1)).update(request);
+		}
+
 	}
 
 }
