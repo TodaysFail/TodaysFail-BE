@@ -19,6 +19,7 @@ import com.todaysfailbe.member.repository.MemberRepository;
 import com.todaysfailbe.record.domain.Record;
 import com.todaysfailbe.record.model.request.CreateRecordRequest;
 import com.todaysfailbe.record.model.request.DeleteRecordRequest;
+import com.todaysfailbe.record.model.request.UpdateRecordRequest;
 import com.todaysfailbe.record.model.response.RecordDto;
 import com.todaysfailbe.record.model.response.RecordsResponse;
 import com.todaysfailbe.record.repository.RecordRepository;
@@ -113,6 +114,7 @@ public class RecordService {
 		log.info("[RecordService.deleteRecord] 레코드 삭제 성공");
 	}
 
+	@Transactional(readOnly = true)
 	public RecordDto getRecord(Long recordId) {
 		log.info("[RecordService.getRecord] 레코드 단 건 조회 요청");
 		Record record = recordRepository.findById(recordId)
@@ -127,5 +129,28 @@ public class RecordService {
 		);
 		log.info("[RecordService.getRecord] 레코드 단 건 조회 성공");
 		return recordDto;
+	}
+
+	@Transactional
+	public void updateRecord(UpdateRecordRequest updateRecordRequest) {
+		log.info("[RecordService.updateRecord] 레코드 수정 요청");
+		Long userIdBySession = sessionUtil.findUserIdBySession();
+		Member member = memberRepository.findById(userIdBySession)
+				.orElseThrow(() -> {
+					log.info("[RecordService.updateRecord] 레코드 수정 실패 - 존재하지 않는 회원: {}", userIdBySession);
+					throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+				});
+		Record record = recordRepository.findById(updateRecordRequest.getRecordId())
+				.orElseThrow(() -> {
+					log.info("[RecordService.updateRecord] 레코드 수정 실패 - 존재하지 않는 레코드: {}",
+							updateRecordRequest.getRecordId());
+					throw new IllegalArgumentException("존재하지 않는 레코드입니다.");
+				});
+		if (!member.equals(record.getMember())) {
+			log.info("[RecordService.updateRecord] 레코드 수정 실패 - 해당 레코드를 수정할 권한이 없음");
+			throw new IllegalArgumentException("해당 레코드를 수정할 권한이 없습니다.");
+		}
+		record.update(updateRecordRequest);
+		log.info("[RecordService.updateRecord] 레코드 수정 성공");
 	}
 }
