@@ -17,7 +17,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ApiModel
-@ToString
+@ToString(exclude = "password")
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginMemberRequest {
