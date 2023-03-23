@@ -27,7 +27,7 @@ public class ReceiptResponse {
 	@ApiModelProperty(value = "영수증 번호", required = true, example = "567cf5b4-0080-486f-836d-22a5db1540de")
 	private String uuid;
 
-	@ApiModelProperty(value = "작성자의 닉네임", required = true, example = "FEBRUARY 02 - 26, 2023")
+	@ApiModelProperty(value = "작성자의 닉네임", required = true, example = "도모")
 	private String writerName;
 
 	private ReceiptResponse(Integer total, List<ReceiptDto> receiptList, String date, String uuid, String writerName) {
