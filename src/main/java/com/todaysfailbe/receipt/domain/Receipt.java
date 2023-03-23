@@ -34,19 +34,23 @@ public class Receipt extends BaseEntity {
 	@Column(name = "RECEIPT_ID")
 	private UUID id;
 
+	private String name;
+
 	@ElementCollection
 	private List<Long> recordIds;
 
 	private LocalDate receiptDate;
 
-	private Receipt(List<Long> recordIds, LocalDate receiptDate) {
+	private Receipt(String writerName, List<Long> recordIds, LocalDate receiptDate) {
+		Assert.notNull(writerName, "작성자 이름은 필수입니다.");
 		Assert.notNull(recordIds, "실패 기록 ID 리스트는 필수입니다.");
 		Assert.notNull(receiptDate, "영수증 발급일은 필수입니다.");
+		this.name = name;
 		this.recordIds = recordIds;
 		this.receiptDate = receiptDate;
 	}
 
-	public static Receipt from(List<Long> recordIds, LocalDate receiptDate) {
-		return new Receipt(recordIds, receiptDate);
+	public static Receipt from(String name, List<Long> recordIds, LocalDate receiptDate) {
+		return new Receipt(name, recordIds, receiptDate);
 	}
 }
