@@ -112,6 +112,18 @@ public class RecordController {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
+	@ApiOperation(
+			value = "실패 기록을 수정합니다.",
+			notes = "기록의 ID와 수정할 데이터를 받아 해당 실패 기록을 수정합니다."
+	)
+	@ApiResponses({
+			@ApiResponse(
+					code = 200, message = "API 정상 작동 / 실패 기록 수정 성공"
+			),
+			@ApiResponse(
+					code = 400, message = "존재하지 않는 실패 기록이거나 혹은 권한이 없는 경우입니다"
+			)
+	})
 	@PutMapping
 	public ResponseEntity<Void> updateRecord(@RequestBody @Valid UpdateRecordRequest updateRecordRequest) {
 		log.info("[RecordController.updateRecord] 레코드 수정 요청");
