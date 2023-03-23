@@ -77,7 +77,7 @@ public class ReceiptService {
 				receiptDtoList,
 				yearMonthDateConversion(receipt.getReceiptDate()),
 				receiptId,
-				receipt.getName()
+				receipt.getWriterName()
 		);
 		log.info("[ReceiptService.getReceipt] 영수증 조회 완료: {}", response);
 		return response;
