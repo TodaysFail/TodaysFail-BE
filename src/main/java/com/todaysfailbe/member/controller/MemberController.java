@@ -100,6 +100,18 @@ public class MemberController {
 		return ResponseEntity.ok(memberService.checkDuplicateName(name));
 	}
 
+	@ApiOperation(
+			value = "회원 정보 조회",
+			notes = "회원 정보를 조회합니다"
+	)
+	@ApiResponses({
+			@ApiResponse(
+					code = 200, message = "API 정상 작동 / 중복확인 완료"
+			),
+			@ApiResponse(
+					code = 400, message = "로그인이 되어있지 않거나 존재하지 않는 회원일 경우입니다"
+			)
+	})
 	@GetMapping("/info")
 	public ResponseEntity<MemberDto> getMemberInfo() {
 		log.info("[MemberController.getMemberInfo] 회원 정보 조회 요청");
