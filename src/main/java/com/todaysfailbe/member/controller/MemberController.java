@@ -101,12 +101,12 @@ public class MemberController {
 	}
 
 	@ApiOperation(
-			value = "회원 정보 조회",
-			notes = "회원 정보를 조회합니다"
+			value = "회원 정보를 조회합니다.",
+			notes = "세션을 통해 로그인한 회원의 정보를 조회합니다."
 	)
 	@ApiResponses({
 			@ApiResponse(
-					code = 200, message = "API 정상 작동 / 중복확인 완료"
+					code = 200, message = "API 정상 작동 / 회원 정보 조회 성공"
 			),
 			@ApiResponse(
 					code = 400, message = "로그인이 되어있지 않거나 존재하지 않는 회원일 경우입니다"
