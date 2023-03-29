@@ -382,6 +382,27 @@ class RecordControllerTest {
 		}
 
 		@Test
+		@DisplayName("제목이 17자를 초과하면 예외를 발생시킨다.")
+		void 제목이_17자를_초과하면_예외가_발생한다() throws Exception {
+			// given
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.title("일이삼사오육칠팔구십일이삼사오육칠팔")
+					.content("핫케이크를 타다가 불이 났다.")
+					.feel("다음에 더 잘하면 된다")
+					.build();
+
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("제목은 17자 이하로 입력해주세요."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
 		@DisplayName("내용을 입력하지 않았다면 예외를 발생시킨다.")
 		void 내용을_입력하지_않았다면_예외를_발생시킨다() throws Exception {
 			// given
@@ -396,6 +417,32 @@ class RecordControllerTest {
 							.content(objectMapper.writeValueAsString(updateRecordRequest)))
 					.andExpect(status().isBadRequest())
 					.andExpect(jsonPath("$.message").value("내용은 필수입니다."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
+		@DisplayName("내용이 300자를 초과하면 예외가 발생한다.")
+		void 내용이_300자를_초과하면_예외가_발생한다() throws Exception {
+			// given
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < 30; i++) {
+				sb.append("일이삼사오육칠팔구십");
+			}
+			sb.append("일");
+
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.title("핫케이크 태움")
+					.content(sb.toString())
+					.feel("다음에 더 잘하면 된다")
+					.build();
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("내용은 300자 이하로 입력해주세요."))
 					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
 					.andDo(print());
 		}
@@ -420,6 +467,27 @@ class RecordControllerTest {
 		}
 
 		@Test
+		@DisplayName("느낀점이 20자를 초과하면 예외가 발생한다.")
+		void 느낀점이_20자를_초과하면_예외가_발생한다() throws Exception {
+			// given
+			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
+					.recordId(1L)
+					.title("핫케이크 태움")
+					.content("핫케이크를 타다가 불이 났다.")
+					.feel("일이삼사오육칠팔구십일이삼사오육칠팔구십일")
+					.build();
+
+			// when, then
+			mockMvc.perform(put("/api/v1/record/")
+							.contentType(MediaType.APPLICATION_JSON)
+							.content(objectMapper.writeValueAsString(updateRecordRequest)))
+					.andExpect(status().isBadRequest())
+					.andExpect(jsonPath("$.message").value("느낀점은 20자 이하로 입력해주세요."))
+					.andExpect(jsonPath("$.errorSimpleName").value("MethodArgumentNotValidException"))
+					.andDo(print());
+		}
+
+		@Test
 		@DisplayName("입력 값이 정상이면 200 응답을 받는다.")
 		void 입력_값이_정상이면_200_응답을_받는다() throws Exception {
 			UpdateRecordRequest updateRecordRequest = UpdateRecordRequest.builder()
@@ -428,7 +496,7 @@ class RecordControllerTest {
 					.content("핫케이크를 타다가 불이 났다.")
 					.feel("다음에 더 잘하면 된다")
 					.build();
-			
+
 			// when, then
 			mockMvc.perform(put("/api/v1/record/")
 							.contentType(MediaType.APPLICATION_JSON)
