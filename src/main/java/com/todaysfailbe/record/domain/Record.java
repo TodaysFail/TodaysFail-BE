@@ -39,7 +39,7 @@ public class Record extends BaseEntity {
 	@Column(name = "TITLE")
 	private String title;
 
-	@Column(name = "CONTENT")
+	@Column(name = "CONTENT", length = 300)
 	private String content;
 
 	@Column(name = "FEEL")
