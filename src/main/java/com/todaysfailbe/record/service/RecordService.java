@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -61,9 +61,9 @@ public class RecordService {
 
 		List<RecordsResponse> response = new ArrayList<>();
 
-		ConcurrentMap<LocalDate, List<Record>> map = recordRepository.findAllByMember(member)
+		Map<LocalDate, List<Record>> map = recordRepository.findAllByMember(member)
 				.stream()
-				.collect(Collectors.groupingByConcurrent(
+				.collect(Collectors.groupingBy(
 								record -> {
 									LocalDateTime dateTime = record.getCreatedAt();
 									return LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
