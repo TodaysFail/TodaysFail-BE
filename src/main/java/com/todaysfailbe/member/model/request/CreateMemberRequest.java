@@ -28,6 +28,7 @@ public class CreateMemberRequest {
 
 	@NotBlank(message = "비밀번호는 필수입니다.")
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d\\w\\W]{8,}$", message = "비밀번호는 8자 이상, 영문, 숫자를 포함해야 합니다.")
+	@Size(max = 16, message = "비밀번호는 16자 이하로 입력해주세요.")
 	@ApiModelProperty(value = "비밀번호", required = true, example = "asdf1234 (8자 이상, 영문, 숫자 포함)")
 	private String password;
 }
